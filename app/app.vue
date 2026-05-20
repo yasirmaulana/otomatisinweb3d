@@ -33,8 +33,12 @@ const initExperience = () => {
   gsap.registerPlugin(ScrollTrigger)
 
   const canvas = videoCanvas.value
-  const context = canvas.getContext('2d')
+  // alpha: false → browser tidak perlu kalkulasi transparansi, lebih cepat
+  const context = canvas.getContext('2d', { alpha: false })
   const video = videoSource.value
+
+  // Batasi DPR max 2 — di DPR 3 (banyak HP), ini hemat 55% piksel yang digambar
+  const dpr = Math.min(window.devicePixelRatio, 2)
 
   const render = () => {
     if (!video.videoWidth) return
@@ -54,18 +58,28 @@ const initExperience = () => {
       dH = cH * mobileZoom; dW = dH * vAspect
       dX = (cW - dW) / 2; dY = (cH - dH) / 2
     }
-    context.clearRect(0, 0, cW, cH)
+    // Tidak perlu clearRect karena alpha: false, drawImage langsung timpa frame sebelumnya
     context.drawImage(video, dX, dY, dW, dH)
   }
 
   const resize = () => {
-    canvas.width = window.innerWidth * window.devicePixelRatio
-    canvas.height = window.innerHeight * window.devicePixelRatio
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
     render()
   }
 
-  window.addEventListener('resize', resize)
+  window.addEventListener('resize', resize, { passive: true })
   resize()
+
+  // RAF scheduler — pastikan render hanya 1x per frame browser, tidak lebih
+  let rafId = null
+  const scheduleRender = () => {
+    if (rafId) return
+    rafId = requestAnimationFrame(() => {
+      render()
+      rafId = null
+    })
+  }
 
   // Video Scrubbing Logic
   const videoProxy = { currentTime: 0 }
@@ -79,7 +93,7 @@ const initExperience = () => {
       scrub: 1.2,
       onUpdate: () => {
         video.currentTime = videoProxy.currentTime
-        render()
+        scheduleRender()
       }
     }
   })
@@ -284,12 +298,12 @@ onMounted(() => {
 
     <!-- Background Viewport -->
     <div class="fixed inset-0 -z-10 bg-black">
-      <canvas ref="videoCanvas" class="w-full h-full object-cover"></canvas>
+      <canvas ref="videoCanvas" class="w-full h-full object-cover" style="will-change: transform;"></canvas>
     </div>
 
     <!-- Hidden Video Source -->
     <video ref="videoSource" class="hidden" muted playsinline preload="auto">
-      <source src="/otomatisin-partner-video-rocket.mp4" type="video/mp4">
+      <source src="/otomatisin-partner-video-rocket-web.mp4" type="video/mp4">
     </video>
 
     <!-- UI OVERLAY (FIXED) -->
