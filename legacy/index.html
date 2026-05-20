@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otomatisin | 3D Rocket Responsive</title>
+    
+    <!-- Fonts & Frameworks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#050505',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style type="text/tailwindcss">
+        @layer components {
+            .glass-card {
+                /* Lebih gelap di mobile (bg-black/20) dan lebih terang di desktop (bg-white/5) */
+                @apply bg-black/20 md:bg-white/5 backdrop-blur-2xl border border-white/10 p-6 md:p-14 rounded-[32px] shadow-2xl;
+            }
+            .hero-title {
+                @apply text-4xl md:text-8xl font-black tracking-tighter leading-none mb-6 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent;
+            }
+            .hero-desc {
+                /* Putih solid di mobile untuk kontras tinggi */
+                @apply text-base md:text-2xl text-white md:text-white/60 font-light leading-relaxed;
+            }
+        }
+        
+        /* Custom hide scrollbar */
+        body::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-dark text-white selection:bg-white selection:text-black">
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center gap-6">
+        <div class="text-[10px] tracking-[0.5em] text-white/40 font-bold uppercase">Initializing Systems</div>
+        <div class="w-48 h-[1px] bg-white/10 relative overflow-hidden">
+            <div id="progress" class="absolute inset-y-0 left-0 bg-white w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- Background Viewport -->
+    <div id="viewport" class="fixed inset-0 -z-10 bg-black">
+        <canvas id="video-canvas" class="w-full h-full object-cover"></canvas>
+    </div>
+
+    <!-- Hidden Video Source -->
+    <video id="video-source" class="hidden" muted playsinline preload="auto">
+        <source src="otomatisin-partner-video-rocket.mp4" type="video/mp4">
+    </video>
+
+    <!-- Scroll Content -->
+    <main class="scroll-container relative z-10">
+        
+        <!-- Section 0: Pure Hero (Clean) -->
+        <section class="h-[100vh] flex flex-col items-center justify-center px-4 text-center pointer-events-none">
+            <div class="glass-card opacity-0 translate-y-10">
+                <h1 class="hero-title uppercase">Strategic IT Partner</h1>
+                <p class="hero-desc">Ubah Ide Menjadi Produk Digital Tanpa Investasi IT di Awal.</p>
+            </div>
+        </section>
+
+        <!-- Section 1: 3-Month Sprint -->
+        <section class="h-[150vh] flex items-center justify-center px-4 md:px-20">
+            <div class="glass-card w-full max-w-4xl opacity-0 translate-y-10 text-center">
+                <h1 class="hero-title uppercase text-3xl md:text-6xl">90 Hari Menuju Validasi Pasar</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 text-left">
+                    <div class="p-4 border-l-2 border-white/20">
+                        <h3 class="font-bold text-white mb-2">Bulan 1: Build</h3>
+                        <p class="text-sm text-white/60">Pengembangan MVP dengan fitur inti yang siap menghasilkan uang.</p>
+                    </div>
+                    <div class="p-4 border-l-2 border-white/20">
+                        <h3 class="font-bold text-white mb-2">Bulan 2: Launch</h3>
+                        <p class="text-sm text-white/60">Operasional penuh dengan dukungan sistem infrastruktur 24/7.</p>
+                    </div>
+                    <div class="p-4 border-l-2 border-white/20">
+                        <h3 class="font-bold text-white mb-2">Bulan 3: Evaluate</h3>
+                        <p class="text-sm text-white/60">Analisis data untuk skala besar atau pivot ke model bisnis baru.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Case Study -->
+        <section class="h-[150vh] flex items-center justify-center px-4 md:px-20">
+            <div class="glass-card w-full max-w-3xl opacity-0 translate-y-10 text-center">
+                <h1 class="hero-title uppercase text-3xl md:text-6xl">Live Case Study</h1>
+                <p class="hero-desc mb-6">Membangun Solusi di Lapangan Nyata: Sistem Manajemen Ambulans.</p>
+                <p class="text-white/60 text-sm md:text-lg italic">"Contoh sistem manajemen armada dan pemesanan real-time untuk memvalidasi kebutuhan layanan darurat medis."</p>
+                <div class="mt-8 flex justify-center gap-4">
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-[10px] tracking-widest uppercase">Nuxt.js</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-[10px] tracking-widest uppercase">Supabase</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Social Proof -->
+        <section class="h-[150vh] flex items-center justify-center px-4 md:px-20">
+            <div class="glass-card w-full max-w-3xl opacity-0 translate-y-10 text-center">
+                <h1 class="hero-title uppercase text-3xl md:text-6xl">Apa Kata Mereka?</h1>
+                <p class="hero-desc italic">"Sistem yang dikembangkan membantu efisiensi bisnis kami dari pencatatan manual ke sistem digital dalam waktu singkat."</p>
+                <p class="mt-6 text-white font-bold">— Klien UD. Cipta Abadi</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Call to Action -->
+        <section class="h-[100vh] flex items-center justify-center px-4 md:px-20">
+            <div class="glass-card w-full max-w-3xl opacity-0 translate-y-10 text-center">
+                <h1 class="hero-title uppercase text-3xl md:text-6xl">Siap Meluncur?</h1>
+                <p class="hero-desc mb-8">Kami siapkan mesin teknologinya, Anda fokus pada pasarnya.</p>
+                <button class="px-8 py-4 bg-white text-black font-black uppercase tracking-[0.2em] rounded-full hover:bg-gray-200 transition-colors">
+                    Daftar Kemitraan
+                </button>
+            </div>
+        </section>
+
+
+        
+        <!-- Footer -->
+        <footer class="h-[50vh] flex items-end justify-center pb-20">
+            <p class="text-[10px] tracking-widest text-white/20 uppercase">&copy; 2024 Otomatisin Project. All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const canvas = document.getElementById('video-canvas');
+        const context = canvas.getContext('2d');
+        const video = document.getElementById('video-source');
+        const progressLine = document.getElementById('progress');
+        const loader = document.getElementById('loader');
+
+        // Render function (Adaptive for Mobile & Desktop)
+        function render() {
+            if (!video.videoWidth) return;
+            
+            const vW = video.videoWidth;
+            const vH = video.videoHeight;
+            const cW = canvas.width;
+            const cH = canvas.height;
+            
+            const vAspect = vW / vH;
+            const cAspect = cW / cH;
+            let dW, dH, dX, dY;
+
+            // Logika "Smart Cover"
+            if (cAspect > vAspect) {
+                // Desktop / Landscape: Lebar mengikuti layar
+                dW = cW;
+                dH = cW / vAspect;
+                dX = 0;
+                dY = (cH - dH) / 2;
+            } else {
+                // Mobile: Add a bit more zoom to keep the 3D subject prominent
+                const mobileZoom = window.innerWidth < 768 ? 1.3 : 1;
+                dH = cH * mobileZoom;
+                dW = dH * vAspect;
+                dX = (cW - dW) / 2;
+                dY = (cH - dH) / 2;
+            }
+
+            context.clearRect(0, 0, cW, cH);
+            context.drawImage(video, dX, dY, dW, dH);
+        }
+
+        // Setup Canvas Size & Debugging
+        function resize() {
+            canvas.width = window.innerWidth * window.devicePixelRatio;
+            canvas.height = window.innerHeight * window.devicePixelRatio;
+            
+            console.log(`[DEBUG] Resizing to: ${window.innerWidth}x${window.innerHeight} @ ${window.devicePixelRatio}x`);
+            render();
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Video Loading Logic
+        video.addEventListener('loadedmetadata', () => {
+            console.log(`[DEBUG] Video Metadata Loaded: ${video.videoWidth}x${video.videoHeight}, Duration: ${video.duration}s`);
+            initExperience();
+        });
+        
+        // Progress Bar Simulation
+        let loadInt = setInterval(() => {
+            let cur = parseFloat(progressLine.style.width) || 0;
+            if (cur < 90) progressLine.style.width = (cur + Math.random() * 15) + '%';
+        }, 150);
+
+        function initExperience() {
+            clearInterval(loadInt);
+            progressLine.style.width = '100%';
+            
+            gsap.to(loader, { 
+                opacity: 0, 
+                duration: 1, 
+                delay: 0.5,
+                onComplete: () => loader.style.display = 'none' 
+            });
+
+            const videoProxy = { currentTime: 0 };
+
+            // Scroll Scrubbing
+            gsap.to(videoProxy, {
+                currentTime: video.duration,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".scroll-container",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.2,
+                    onUpdate: (self) => {
+                        video.currentTime = videoProxy.currentTime;
+                        render();
+                    }
+                }
+            });
+
+            // Card Entrance Animations
+            gsap.utils.toArray('.glass-card').forEach((card) => {
+                gsap.to(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        end: "top 40%",
+                        scrub: true,
+                    },
+                    opacity: 1,
+                    y: 0,
+                    ease: "power2.out"
+                });
+            });
+
+            // Initial Draw
+            video.currentTime = 0.01;
+            setTimeout(render, 200);
+        }
+    </script>
+</body>
+</html>

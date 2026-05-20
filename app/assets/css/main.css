@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#050505] text-white overflow-x-hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-black/20 md:bg-white/5 backdrop-blur-2xl border border-white/10 p-6 md:p-14 rounded-[32px] shadow-2xl;
+  }
+  .hero-title {
+    @apply text-4xl md:text-8xl font-black tracking-tighter leading-none mb-6 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent;
+  }
+  .hero-desc {
+    @apply text-base md:text-2xl text-white md:text-white/60 font-light leading-relaxed;
+  }
+}
