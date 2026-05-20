@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', '@vercel/analytics'],
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     supabaseUrl: process.env.SUPABASE_URL || '',
