@@ -10,7 +10,7 @@
       <div></div>
 
       <!-- Navigation Desktop -->
-      <nav class="hidden md:flex items-center gap-10 text-sm tracking-[0.2em] font-bold uppercase text-white/60">
+      <nav class="hidden md:flex items-center gap-10 text-sm tracking-[0.2em] font-bold uppercase text-white/80 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
         <a href="#" @click.prevent="scrollTo('.trigger-zone-2')" class="hover:text-white transition-colors">Projects</a>
         <a href="#" @click.prevent="scrollTo('.trigger-zone-3')" class="hover:text-white transition-colors">Testimonials</a>
         <a href="#" @click.prevent="scrollTo('.trigger-zone-4')" class="hover:text-white transition-colors">Partnership</a>

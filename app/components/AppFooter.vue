@@ -11,7 +11,7 @@
       <div class="flex justify-start md:justify-end gap-8 text-sm tracking-[0.2em] font-bold uppercase text-white/40">
         <a href="#" class="hover:text-white transition-colors">Privacy</a>
         <a href="#" class="hover:text-white transition-colors">Terms</a>
-        <a href="#" class="hover:text-white transition-colors">Contact</a>
+        <a href="https://wa.me/6281586245143" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Contact</a>
       </div>
     </div>
   </footer>

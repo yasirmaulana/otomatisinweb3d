@@ -5,11 +5,15 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 // SEO & Fonts
 useHead({
-  title: 'Otomatisin | 3D Rocket Nuxt',
+  title: 'Otomatisin | Strategic IT Partner – Profit Share Model',
+  meta: [
+    { name: 'description', content: 'Kami membangun sistem digital untuk bisnis Anda tanpa biaya awal. Model kemitraan profit share – kami investasi teknologi, Anda fokus pada pasar.' }
+  ],
   link: [
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap' }
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap&display=swap' },
+    { rel: 'preload', href: '/otomatisin-partner-video-rocket-web.mp4', as: 'video', type: 'video/mp4' }
   ]
 })
 
@@ -33,12 +37,16 @@ const initExperience = () => {
   gsap.registerPlugin(ScrollTrigger)
 
   const canvas = videoCanvas.value
-  // alpha: false → browser tidak perlu kalkulasi transparansi, lebih cepat
   const context = canvas.getContext('2d', { alpha: false })
   const video = videoSource.value
 
-  // Batasi DPR max 2 — di DPR 3 (banyak HP), ini hemat 55% piksel yang digambar
-  const dpr = Math.min(window.devicePixelRatio, 2)
+  const isMobile = window.innerWidth < 768
+  // Mobile: DPR 1 — canvas di CSS pixel size, GPU scale up ke layar fisik (gratis)
+  // Desktop: cap DPR 2 — cukup untuk Retina tanpa overkill 3x
+  const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2)
+
+  // Matikan smoothing — tidak perlu interpolasi untuk video background fullscreen
+  context.imageSmoothingEnabled = false
 
   const render = () => {
     if (!video.videoWidth) return
@@ -54,31 +62,44 @@ const initExperience = () => {
       dW = cW; dH = cW / vAspect
       dX = 0; dY = (cH - dH) / 2
     } else {
-      const mobileZoom = window.innerWidth < 768 ? 1.3 : 1
+      const mobileZoom = isMobile ? 1.3 : 1
       dH = cH * mobileZoom; dW = dH * vAspect
       dX = (cW - dW) / 2; dY = (cH - dH) / 2
     }
-    // Tidak perlu clearRect karena alpha: false, drawImage langsung timpa frame sebelumnya
     context.drawImage(video, dX, dY, dW, dH)
   }
 
   const resize = () => {
     canvas.width = window.innerWidth * dpr
     canvas.height = window.innerHeight * dpr
+    context.imageSmoothingEnabled = false // reset setelah resize (browser bisa reset ini)
     render()
   }
 
   window.addEventListener('resize', resize, { passive: true })
   resize()
 
-  // RAF scheduler — pastikan render hanya 1x per frame browser, tidak lebih
+  // requestVideoFrameCallback — render hanya saat browser punya frame baru yang sudah di-decode
+  // Ini kunci untuk mobile: tidak render frame lama saat video masih decoding
+  const supportsVFC = 'requestVideoFrameCallback' in video
   let rafId = null
+  let vfcPending = false
+
   const scheduleRender = () => {
-    if (rafId) return
-    rafId = requestAnimationFrame(() => {
-      render()
-      rafId = null
-    })
+    if (supportsVFC) {
+      if (vfcPending) return
+      vfcPending = true
+      video.requestVideoFrameCallback(() => {
+        render()
+        vfcPending = false
+      })
+    } else {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        render()
+        rafId = null
+      })
+    }
   }
 
   // Video Scrubbing Logic
@@ -289,7 +310,7 @@ onMounted(() => {
     <!-- Preloader -->
     <Transition name="fade">
       <div v-if="showLoader" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center gap-6">
-        <div class="text-[10px] tracking-[0.5em] text-white/40 font-bold uppercase text-center">Initializing Systems</div>
+        <div class="text-[10px] tracking-[0.5em] text-white/70 font-bold uppercase text-center">Initializing Systems</div>
         <div class="w-48 h-[1px] bg-white/10 relative overflow-hidden">
           <div ref="progressLine" class="absolute inset-y-0 left-0 bg-white w-0 transition-all duration-300"></div>
         </div>
