@@ -399,6 +399,23 @@ onMounted(() => {
       </div>
     </div>
 
+    <!-- Scroll Indicator -->
+    <Transition name="fade">
+      <div
+        v-if="!showLoader"
+        class="fixed bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 pointer-events-none select-none"
+      >
+        <span class="text-xs font-black uppercase tracking-[0.5em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Scroll</span>
+        <div class="w-8 h-14 rounded-full border-2 border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-start justify-center pt-2">
+          <div class="w-1.5 h-3 bg-white rounded-full scroll-dot shadow-[0_0_6px_rgba(255,255,255,0.8)]"></div>
+        </div>
+        <!-- Chevron bawah -->
+        <svg class="w-5 h-5 text-white scroll-chevron drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+    </Transition>
+
     <!-- SCROLL PROVIDER (INVISIBLE) -->
     <div class="scroll-provider relative">
       <div class="trigger-zone-0 h-[150vh]"></div>
@@ -415,4 +432,24 @@ onMounted(() => {
 <style scoped>
 .fade-enter-active, .fade-leave-active { transition: opacity 1s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+.scroll-dot {
+  animation: scroll-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+  0%   { transform: translateY(0);    opacity: 1; }
+  60%  { transform: translateY(28px); opacity: 0; }
+  61%  { transform: translateY(0);    opacity: 0; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
+
+.scroll-chevron {
+  animation: chevron-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes chevron-pulse {
+  0%, 100% { transform: translateY(0);   opacity: 0.5; }
+  50%       { transform: translateY(4px); opacity: 1; }
+}
 </style>
