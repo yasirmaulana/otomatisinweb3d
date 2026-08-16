@@ -7,11 +7,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@vercel/analytics'],
   css: ['~/assets/css/main.css'],
-  runtimeConfig: {
-    supabaseUrl: process.env.SUPABASE_URL || '',
-    supabaseKey: process.env.SUPABASE_KEY || '',
-    fonnteToken: process.env.FONNTE_TOKEN || '',
-  },
   vite: {
     optimizeDeps: {
       include: ['gsap', 'gsap/ScrollTrigger']

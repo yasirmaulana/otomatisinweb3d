@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model PartnershipLead {
+  id            String   @id @default(uuid())
+  name          String
+  whatsapp      String
+  email         String
+  background    String
+  commitment    String
+  ideaName      String   @map("idea_name")
+  targetUser    String   @map("target_user")
+  problem       String
+  mvpFeatures   String   @map("mvp_features")
+  acquisition   String
+  validation    String
+  profitShare   String   @map("profit_share")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("lp-partnership_leads")
+}

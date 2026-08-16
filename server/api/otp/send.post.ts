@@ -16,16 +16,21 @@ export default defineEventHandler(async (event) => {
       message: `Kode OTP Kemitraan Otomatisin:\n\n*${code}*\n\nBerlaku 5 menit. Jangan bagikan ke siapapun.`,
     })
 
-    await $fetch<{ status: boolean }>('https://api.fonnte.com/send', {
+    const response = await $fetch<{ status: boolean; detail?: string }>('https://api.fonnte.com/send', {
       method: 'POST',
       headers: {
-        Authorization: config.fonnteToken,
+        Authorization: process.env.FONNTE_TOKEN,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: params.toString(),
     })
-  } catch {
-    throw createError({ statusCode: 502, message: 'Gagal mengirim OTP ke WhatsApp. Coba lagi.' })
+
+    if (!response.status) {
+      throw createError({ statusCode: 502, message: response.detail || 'Gagal mengirim OTP ke WhatsApp.' })
+    }
+  } catch (error: any) {
+    const message = error?.data?.message || error?.message || 'Gagal mengirim OTP ke WhatsApp. Coba lagi.'
+    throw createError({ statusCode: 502, message })
   }
 
   return { success: true }

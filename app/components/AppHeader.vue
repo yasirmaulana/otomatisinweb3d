@@ -1,61 +1,51 @@
 <template>
   <header
     :class="[
-      'fixed top-0 left-0 w-full z-[80] transition-all duration-500 px-6 py-6 md:px-20',
-      isScrolled ? 'bg-black/20 backdrop-blur-md py-4' : 'bg-transparent'
+      'fixed top-0 left-0 w-full z-[80] transition-all duration-300 px-4 py-4 md:px-6',
+      isScrolled ? 'bg-white/95 backdrop-blur-sm border-b border-[#e9eaeb] shadow-sm' : 'bg-transparent'
     ]"
   >
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <!-- Logo Area -->
-      <div></div>
+      <div class="text-lg font-bold tracking-tight" :class="isScrolled ? 'text-[#181d27]' : 'text-white'">
+        Otomatisin
+      </div>
 
-      <!-- Navigation Desktop -->
-      <nav class="hidden md:flex items-center gap-10 text-sm tracking-[0.2em] font-bold uppercase text-white/80 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
-        <a href="#" @click.prevent="scrollTo('.trigger-zone-2')" class="hover:text-white transition-colors">Projects</a>
-        <a href="#" @click.prevent="scrollTo('.trigger-zone-3')" class="hover:text-white transition-colors">Testimonials</a>
-        <a href="#" @click.prevent="scrollTo('.trigger-zone-4')" class="hover:text-white transition-colors">Partnership</a>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+        <a href="#projects" @click.prevent="scrollTo('#projects')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Live Case Study</a>
+        <a href="#partnership" @click.prevent="scrollTo('#partnership')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Partnership</a>
       </nav>
 
-      <!-- CTA + Hamburger (Mobile) -->
       <div class="flex items-center gap-3">
-        <!-- <button @click="$emit('open-form')" class="bg-white text-black text-sm font-black uppercase tracking-widest px-6 py-3 rounded-full hover:bg-gray-200 transition-all active:scale-95 shadow-xl">
+        <button
+          @click="$emit('open-form')"
+          class="hidden md:inline-flex btn-primary"
+        >
           Apply Now
-        </button> -->
+        </button>
 
-        <!-- Hamburger -->
         <button
           @click="menuOpen = !menuOpen"
-          class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-full bg-white/10 backdrop-blur hover:bg-white/20 transition-colors"
+          class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-xl transition-colors"
+          :class="isScrolled ? 'bg-[#f5f5f5] hover:bg-[#e9eaeb]' : 'bg-white/10 backdrop-blur hover:bg-white/20'"
           aria-label="Toggle menu"
         >
-          <span class="block w-5 h-0.5 bg-white transition-all duration-300" :class="menuOpen ? 'rotate-45 translate-y-[6.5px]' : ''"></span>
-          <span class="block w-5 h-0.5 bg-white transition-all duration-300" :class="menuOpen ? 'opacity-0' : ''"></span>
-          <span class="block w-5 h-0.5 bg-white transition-all duration-300" :class="menuOpen ? '-rotate-45 -translate-y-[6.5px]' : ''"></span>
+          <span class="block w-5 h-0.5 transition-all duration-300" :class="[menuOpen ? 'rotate-45 translate-y-[6.5px]' : '', isScrolled ? 'bg-[#181d27]' : 'bg-white']"></span>
+          <span class="block w-5 h-0.5 transition-all duration-300" :class="[menuOpen ? 'opacity-0' : '', isScrolled ? 'bg-[#181d27]' : 'bg-white']"></span>
+          <span class="block w-5 h-0.5 transition-all duration-300" :class="[menuOpen ? '-rotate-45 -translate-y-[6.5px]' : '', isScrolled ? 'bg-[#181d27]' : 'bg-white']"></span>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Menu Dropdown -->
     <Transition name="menu">
       <nav
         v-if="menuOpen"
-        class="md:hidden mt-4 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/10 overflow-hidden"
+        class="md:hidden mt-3 rounded-xl bg-white border border-[#e9eaeb] shadow-lg overflow-hidden"
       >
-        <a
-          href="#"
-          @click.prevent="navClick('.trigger-zone-2')"
-          class="block px-6 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white/60 hover:text-white hover:bg-white/5 transition-colors border-b border-white/10"
-        >Projects</a>
-        <a
-          href="#"
-          @click.prevent="navClick('.trigger-zone-3')"
-          class="block px-6 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white/60 hover:text-white hover:bg-white/5 transition-colors border-b border-white/10"
-        >Testimonials</a>
-        <a
-          href="#"
-          @click.prevent="navClick('.trigger-zone-4')"
-          class="block px-6 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white/60 hover:text-white hover:bg-white/5 transition-colors"
-        >Partnership</a>
+        <a href="#projects" @click.prevent="navClick('#projects')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa] border-b border-[#e9eaeb]">Live Case Study</a>
+        <a href="#partnership" @click.prevent="navClick('#partnership')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa]">Partnership</a>
+        <div class="p-3 border-t border-[#e9eaeb]">
+          <button @click="$emit('open-form')" class="btn-primary-full">Apply Now</button>
+        </div>
       </nav>
     </Transition>
   </header>
@@ -78,7 +68,8 @@ if (process.client) {
 const scrollTo = (selector) => {
   const el = document.querySelector(selector)
   if (!el) return
-  const top = el.offsetTop + el.offsetHeight * 0.33 - window.innerHeight * 0.5
+  const rect = el.getBoundingClientRect()
+  const top = window.scrollY + rect.top - 80
   window.scrollTo({ top, behavior: 'smooth' })
 }
 

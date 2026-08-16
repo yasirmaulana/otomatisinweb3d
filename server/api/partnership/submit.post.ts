@@ -1,5 +1,6 @@
+import { prisma } from '../../utils/prisma'
+
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
   const body = await readBody(event)
   const { otpCode, ...formData } = body
 
@@ -11,27 +12,20 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 422, message: 'Kode OTP tidak valid atau sudah kedaluwarsa' })
   }
 
-  await $fetch(`${config.supabaseUrl}/rest/v1/partnership_leads`, {
-    method: 'POST',
-    headers: {
-      apikey: config.supabaseKey,
-      Authorization: `Bearer ${config.supabaseKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal',
-    },
-    body: {
+  await prisma.partnershipLead.create({
+    data: {
       name: formData.name,
       whatsapp: formData.whatsapp,
       email: formData.email,
       background: formData.background,
       commitment: formData.commitment,
-      idea_name: formData.ideaName,
-      target_user: formData.targetUser,
+      ideaName: formData.ideaName,
+      targetUser: formData.targetUser,
       problem: formData.problem,
-      mvp_features: formData.mvpFeatures,
+      mvpFeatures: formData.mvpFeatures,
       acquisition: formData.acquisition,
       validation: formData.validation,
-      profit_share: formData.profitShare,
+      profitShare: formData.profitShare,
     },
   })
 

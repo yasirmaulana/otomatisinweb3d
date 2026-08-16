@@ -3,7 +3,6 @@ import { ref, onMounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-// SEO & Fonts
 useHead({
   title: 'Otomatisin | Strategic IT Partner – Profit Share Model',
   meta: [
@@ -12,145 +11,45 @@ useHead({
   link: [
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap&display=swap' },
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&display=swap' },
     { rel: 'preload', href: '/otomatisin-partner-video-rocket-web.mp4', as: 'video', type: 'video/mp4' }
   ]
 })
 
-const videoCanvas = ref(null)
-const videoSource = ref(null)
+const videoPlayer = ref(null)
 const progressLine = ref(null)
 const showLoader = ref(true)
 const isFormOpen = ref(false)
-
-// State for Detail Modal
-const showDetailModal = ref(false)
-const currentDetail = ref('') // 'sprint', 'case-study', 'testimoni'
-
-const openDetail = (section) => {
-  currentDetail.value = section
-  showDetailModal.value = true
-}
 
 const initExperience = () => {
   if (!process.client) return
   gsap.registerPlugin(ScrollTrigger)
 
-  const canvas = videoCanvas.value
-  const context = canvas.getContext('2d', { alpha: false })
-  const video = videoSource.value
-
-  const isMobile = window.innerWidth < 768
-  // Mobile: DPR 1 — canvas di CSS pixel size, GPU scale up ke layar fisik (gratis)
-  // Desktop: cap DPR 2 — cukup untuk Retina tanpa overkill 3x
-  const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2)
-
-  // Matikan smoothing — tidak perlu interpolasi untuk video background fullscreen
-  context.imageSmoothingEnabled = false
-
-  const render = () => {
-    if (!video.videoWidth) return
-    const vW = video.videoWidth
-    const vH = video.videoHeight
-    const cW = canvas.width
-    const cH = canvas.height
-    const vAspect = vW / vH
-    const cAspect = cW / cH
-    let dW, dH, dX, dY
-
-    if (cAspect > vAspect) {
-      dW = cW; dH = cW / vAspect
-      dX = 0; dY = (cH - dH) / 2
-    } else {
-      const mobileZoom = isMobile ? 1.3 : 1
-      dH = cH * mobileZoom; dW = dH * vAspect
-      dX = (cW - dW) / 2; dY = (cH - dH) / 2
-    }
-    context.drawImage(video, dX, dY, dW, dH)
-  }
-
-  const resize = () => {
-    canvas.width = window.innerWidth * dpr
-    canvas.height = window.innerHeight * dpr
-    context.imageSmoothingEnabled = false // reset setelah resize (browser bisa reset ini)
-    render()
-  }
-
-  window.addEventListener('resize', resize, { passive: true })
-  resize()
-
-  // requestVideoFrameCallback — render hanya saat browser punya frame baru yang sudah di-decode
-  // Ini kunci untuk mobile: tidak render frame lama saat video masih decoding
-  const supportsVFC = 'requestVideoFrameCallback' in video
-  let rafId = null
-  let vfcPending = false
-
-  const scheduleRender = () => {
-    if (supportsVFC) {
-      if (vfcPending) return
-      vfcPending = true
-      video.requestVideoFrameCallback(() => {
-        render()
-        vfcPending = false
-      })
-    } else {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        render()
-        rafId = null
-      })
-    }
-  }
-
-  // Video Scrubbing Logic
-  const videoProxy = { currentTime: 0 }
-  gsap.to(videoProxy, {
-    currentTime: video.duration,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".scroll-provider",
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 1.2,
-      onUpdate: () => {
-        video.currentTime = videoProxy.currentTime
-        scheduleRender()
-      }
-    }
-  })
-
-  // Cards Logic (Option 2: Fixed Transition)
-  const cards = gsap.utils.toArray('.card-wrapper')
-  cards.forEach((card, i) => {
-    const trigger = document.querySelector(`.trigger-zone-${i}`)
-
-    gsap.timeline({
+  const sections = gsap.utils.toArray('.section-reveal')
+  sections.forEach((section) => {
+    gsap.to(section, {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power2.out',
       scrollTrigger: {
-        trigger: trigger,
-        start: "top 50%",
-        end: "bottom 50%",
-        toggleActions: "play reverse play reverse",
-        scrub: 1,
-        onEnter: () => gsap.set(card, { pointerEvents: 'auto' }),
-        onLeave: () => gsap.set(card, { pointerEvents: 'none' }),
-        onEnterBack: () => gsap.set(card, { pointerEvents: 'auto' }),
-        onLeaveBack: () => gsap.set(card, { pointerEvents: 'none' })
+        trigger: section,
+        start: 'top 82%',
+        toggleActions: 'play none none reverse'
       }
     })
-    .to(card, { opacity: 1, y: 0, duration: 1 })
-    .to(card, { opacity: 0, y: -20, duration: 1 }, "+=1")
   })
 
-  setTimeout(() => { showLoader.value = false }, 1000)
+  setTimeout(() => { showLoader.value = false }, 400)
 }
 
 onMounted(() => {
   let loadInt = setInterval(() => {
     if (progressLine.value) {
       let cur = parseFloat(progressLine.value.style.width) || 0
-      if (cur < 90) progressLine.value.style.width = (cur + Math.random() * 15) + '%'
+      if (cur < 90) progressLine.value.style.width = (cur + Math.random() * 18) + '%'
     }
-  }, 150)
+  }, 120)
 
   const handleLoaded = () => {
     clearInterval(loadInt)
@@ -158,298 +57,246 @@ onMounted(() => {
     initExperience()
   }
 
-  if (videoSource.value.readyState >= 1) {
+  if (videoPlayer.value.readyState >= 1) {
     handleLoaded()
   } else {
-    videoSource.value.addEventListener('loadedmetadata', handleLoaded)
+    videoPlayer.value.addEventListener('loadedmetadata', handleLoaded)
   }
 })
 </script>
 
 <template>
-  <div class="selection:bg-white selection:text-black">
+  <div class="selection:bg-[#fabc3f] selection:text-black">
     <AppHeader @open-form="isFormOpen = true" />
     <PartnershipForm :is-open="isFormOpen" @close="isFormOpen = false" />
 
-    <DetailModal 
-      :is-open="showDetailModal" 
-      :title="currentDetail === 'hero' ? 'Strategic IT Partner' : currentDetail === 'sprint' ? '90 Hari Menuju Validasi Pasar' : currentDetail === 'case-study' ? 'Live Case Study' : 'Apa Kata Mereka?'" 
-      :subtitle="currentDetail === 'hero' ? 'Kami Berinvestasi pada Ide Anda' : currentDetail === 'sprint' ? 'Metode Kerja Kami' : currentDetail === 'case-study' ? 'Sistem Manajemen Ambulans Real-time' : 'Testimoni Klien'" 
-      @close="showDetailModal = false"
-    >
-      <!-- Konten Hero Section -->
-      <div v-if="currentDetail === 'hero'" class="space-y-6 text-sm text-gray-700">
-        <p>Membangun infrastruktur digital sendiri adalah pertaruhan yang mahal. Kami membuang semua risiko finansial tersebut dari pundak Anda.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl">
-            <h4 class="font-bold text-black mb-2">Zero Upfront Cost</h4>
-            <p>Kami menanggung 100% biaya pengembangan sistem, server, hingga peluncuran MVP.</p>
-          </div>
-          <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl">
-            <h4 class="font-bold text-black mb-2">Skin in the Game</h4>
-            <p>Kami hanya meraih keuntungan ketika sistem yang kami bangun berhasil menghasilkan profit untuk bisnis Anda.</p>
-          </div>
-        </div>
-        <div class="bg-black text-white p-5 rounded-2xl">
-          <h4 class="font-bold mb-2">Sistem yang Teruji</h4>
-          <p>Dari digitalisasi operasional retail tradisional hingga sistem manajemen armada lapangan yang kompleks, kami memastikan teknologi Anda siap menghadapi pasar sejak hari pertama.</p>
-        </div>
-      </div>
-
-      <!-- Konten Sprint 90 Hari -->
-      <div v-if="currentDetail === 'sprint'" class="space-y-6 text-sm text-gray-700">
-        <p>Membangun bisnis digital bukan tentang siapa yang membuat sistem paling besar dan rumit di awal, melainkan tentang siapa yang paling cepat memvalidasi kebutuhan pasar dengan risiko sekecil mungkin.</p>
-        <p>Kami menggunakan metodologi Lean Startup yang memangkas waktu pengembangan tradisional menjadi siklus taktis 90 hari. Seluruh infrastruktur teknologi kami tanggung, sehingga fokus kita bersama adalah kecepatan dan hasil nyata.</p>
-        
-        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-          <h4 class="font-bold text-black text-base mb-2">🚀 BULAN 1: MVP & Launch (Kecepatan Eksekusi)</h4>
-          <p class="mb-4">Fokus utama di 30 hari pertama adalah meluncurkan MVP (Minimum Viable Product) yang siap digunakan dan menghasilkan uang. Kami tidak menghabiskan waktu berbulan-bulan untuk membangun sistem yang terlampau sempurna, melainkan fokus pada fondasi dan fitur inti paling kritikal yang menyelesaikan masalah utama pengguna Anda.</p>
-          <ul class="list-disc pl-5 space-y-2">
-            <li><strong>Efisiensi Stack:</strong> Kami menggunakan kombinasi teknologi modern seperti Nuxt.js / Vue.js untuk antarmuka yang cepat serta Django untuk keamanan sistem backend.</li>
-            <!-- <li><strong>Deployment Instan:</strong> Menggunakan infrastruktur berbasis Docker & Easypanel, sistem Anda akan langsung live dan siap diakses publik dalam hitungan menit setelah kode selesai ditulis.</li> -->
-            <li><strong>Target Akhir:</strong> Produk digital Anda resmi diluncurkan ke pasar sebelum hari ke-30 berakhir.</li>
-          </ul>
-        </div>
-
-        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-          <h4 class="font-bold text-black text-base mb-2">📊 BULAN 2: Operasional & Umpan Balik (Uji Coba Lapangan Nyata)</h4>
-          <p class="mb-4">Setelah aplikasi dapat diakses umum, bisnis kita mulai berjalan di dunia nyata. Di fase ini, terjadi pembagian fokus yang sangat adil dan terstruktur antara kami dan Anda:</p>
-          <ul class="list-disc pl-5 space-y-2">
-            <li><strong>Fokus Kami (Teknologi):</strong> Kami memantau stabilitas server 24/7, mengoptimalkan performa, dan membersihkan bug operasional yang muncul di lapangan agar pengalaman pengguna tetap mulus.</li>
-            <li><strong>Fokus Anda (Pasar):</strong> Anda dan tim berfokus penuh pada penetrasi pasar, menggaet pengguna pertama, dan mengumpulkan umpan balik (feedback) langsung dari konsumen.</li>
-            <li><strong>Target Akhir:</strong> Mengumpulkan data perilaku pengguna asli untuk mengetahui bagian sistem mana yang benar-benar mereka butuhkan.</li>
-          </ul>
-        </div>
-
-        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-          <h4 class="font-bold text-black text-base mb-2">🏁 BULAN 3: Evaluasi & Keputusan (Analisis Berbasis Data)</h4>
-          <p class="mb-4">Bulan ketiga adalah momen kejujuran. Kita akan duduk bersama untuk menyingkirkan ego, membuka dashboard analitik, dan melihat angka pertumbuhan secara objektif.</p>
-          <ul class="list-disc pl-5 space-y-2">
-            <li><strong>Analisis Traksi:</strong> Kita memeriksa data transaksi, jumlah pengguna aktif, dan total pemasukan (revenue) yang masuk ke dalam sistem bagi hasil.</li>
-            <li><strong>Pengambilan Keputusan (Kill or Pivot):</strong>
-              <ul class="list-circle pl-5 mt-2 space-y-1 text-xs">
-                <li><strong>Scale Up:</strong> Jika angka pertumbuhan positif, kita lanjut ke tahap pengembangan fitur lanjutan dan memperbesar kapasitas server.</li>
-                <li><strong>Pivot:</strong> Jika pasar merespons dengan cara yang berbeda, kita putar haluan arah produk tanpa harus membuang seluruh kode dasar yang sudah ada.</li>
-                <li><strong>Kill:</strong> Jika setelah 90 hari terbukti tidak ada kebutuhan pasar, kerja sama dihentikan secara terhormat. Kedua belah pihak tidak rugi besar secara finansial karena risiko modal teknologi telah dibatasi sejak awal.</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div class="bg-black text-white p-6 rounded-2xl">
-          <h4 class="font-bold text-base mb-2">Mengapa Kami Menerapkan Sistem Ini?</h4>
-          <p>Karena kami menaruh modal teknologi kami pada ide Anda (Skin in the Game). Lini masa 3 bulan ini memastikan bahwa kita bergerak dengan disiplin tinggi, efisien, dan selalu berorientasi pada hasil bisnis, bukan sekadar teori di atas kertas.</p>
-        </div>
-      </div>
-
-      <!-- Konten Case Study -->
-      <div v-if="currentDetail === 'case-study'" class="space-y-6 text-sm text-gray-700">
-        <p>Kami tidak hanya menawarkan jasa pembuatan aplikasi lepas. Kami terjun langsung ke lapangan dan menanam investasi teknologi pada ekosistem yang potensial.</p>
-        <p>Salah satu portofolio aktif yang saat ini kami bangun dan kelola sepenuhnya adalah <strong>Ambulanku</strong>, sebuah platform digitalisasi manajemen layanan ambulans darurat dan non-darurat medis.</p>
-
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl">
-          <h4 class="font-bold text-black mb-1">🏥 Mengenal Proyek: Ambulanku</h4>
-          <ul class="space-y-1 text-sm">
-            <li><strong>Tautan Aplikasi:</strong> <a href="https://ambulanku.vercel.app" target="_blank" class="text-blue-600 hover:underline">ambulanku.vercel.app</a></li>
-            <li><strong>Sektor:</strong> Health-Tech & Fleet Management (Manajemen Armada)</li>
-            <li><strong>Model Kemitraan:</strong> Dikembangkan dan dikelola penuh menggunakan Model Manajemen Sistem Bagi Hasil—sama persis dengan komitmen yang kami tawarkan kepada Anda.</li>
-          </ul>
-        </div>
-
-        <!-- <div>
-          <h4 class="font-bold text-black text-base mb-3 mt-8">⚙️ Arsitektur & Highlight Teknis Sistem</h4>
-          <p class="mb-4">Membangun sistem manajemen armada membutuhkan ketepatan data dan performa server yang tangguh. Untuk memastikan operasional di lapangan berjalan tanpa kendala, kami merancang tiga pilar sistem utama di dalam platform Ambulanku:</p>
-          
-          <div class="space-y-4">
-            <div class="border border-gray-100 rounded-xl p-5 shadow-sm">
-              <h5 class="font-bold text-black mb-2">1. Sistem Penjadwalan & Alokasi Armada Real-time</h5>
-              <p>Ketika terjadi kondisi darurat, setiap detik sangat berharga. Kami membangun sistem yang mampu memproses permintaan pengguna, mencocokkan ketersediaan armada terdekat, dan melakukan alokasi tugas kepada pengemudi ambulans secara instan. Sistem ini memangkas birokrasi panggilan telepon manual yang lambat.</p>
-            </div>
-            
-            <div class="border border-gray-100 rounded-xl p-5 shadow-sm">
-              <h5 class="font-bold text-black mb-2">2. Dashboard Manajemen Pendapatan & Operasional (ERP)</h5>
-              <p>Untuk sisi bisnis, kami menyediakan dashboard terpusat yang mengubah pencatatan manual menjadi serbadigital. Pemilik armada dapat memantau:</p>
-              <ul class="list-disc pl-5 mt-2 space-y-1">
-                <li>Log operasional harian dan status perjalanan setiap ambulans.</li>
-                <li>Rekapitulasi pendapatan, biaya bahan bakar, dan insentif pengemudi secara otomatis.</li>
-                <li>Laporan performa bulanan untuk membantu pengambilan keputusan strategis.</li>
-              </ul>
-            </div>
-
-            <div class="border border-gray-100 rounded-xl p-5 shadow-sm">
-              <h5 class="font-bold text-black mb-2">3. Integrasi Pelacakan Lokasi (GPS Tracking) Sederhana</h5>
-              <p>Infrastruktur pelacakan yang tangkas untuk memantau pergerakan armada secara langsung dari peramban (browser). Fitur ini memberikan visibilitas penuh bagi tim operator di posko utama untuk memprediksi Estimated Time of Arrival (ETA) ambulans ke lokasi pasien.</p>
-            </div>
-          </div>
-        </div> -->
-
-        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 mt-8">
-          <h4 class="font-bold text-black text-base mb-2">📊 Status Proyek: Ongoing & Validated</h4>
-          <ul class="space-y-2 mb-4">
-            <li><strong>Fase Saat Ini:</strong> Live Operation & Optimization.</li>
-            <li><strong>Metode Kerja:</strong> Platform ini dijalankan dengan prinsip Lean. Kami terus memantau stabilitas kode di production branch, mengoptimalkan performa server agar tetap hemat daya, dan melakukan update fitur secara berkala berdasarkan dinamika kebutuhan medis di lapangan.</li>
-          </ul>
-          <div class="bg-white p-4 rounded-xl border border-gray-100 italic">
-            <span class="font-bold not-italic block mb-1">Kesimpulan untuk Calon Mitra:</span>
-            Ambulanku adalah bukti nyata bahwa teknologi yang tepat guna mampu merapikan operasional bisnis yang rumit. Jika kami bisa mendigitalisasi dan mengelola sistem manajemen ambulans yang berisiko tinggi di lapangan, kami siap untuk merancang, membangun, dan menyukseskan mesin teknologi untuk ide bisnis Anda.
-          </div>
-        </div>
-      </div>
-
-      <!-- Konten Testimoni -->
-      <div v-if="currentDetail === 'testimoni'" class="space-y-6 text-sm text-gray-700 text-center py-10">
-        <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-        <p class="text-xl italic font-light text-black">"Sistem yang dikembangkan membantu efisiensi bisnis kami dari pencatatan manual ke sistem digital dalam waktu singkat."</p>
-        <div class="mt-6">
-          <h4 class="font-bold text-black">UD. Cipta Abadi</h4>
-          <p class="text-gray-500 text-xs">Klien Strategic IT Partner</p>
-        </div>
-      </div>
-    </DetailModal>
-    
     <!-- Preloader -->
     <Transition name="fade">
-      <div v-if="showLoader" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center gap-6">
-        <div class="text-[10px] tracking-[0.5em] text-white/70 font-bold uppercase text-center">Initializing Systems</div>
-        <div class="w-48 h-[1px] bg-white/10 relative overflow-hidden">
-          <div ref="progressLine" class="absolute inset-y-0 left-0 bg-white w-0 transition-all duration-300"></div>
+      <div v-if="showLoader" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center gap-5">
+        <div class="text-[10px] tracking-[0.4em] text-[#717680] font-bold uppercase text-center">Initializing Systems</div>
+        <div class="w-44 h-1 bg-[#f0f0f0] relative overflow-hidden rounded-full">
+          <div ref="progressLine" class="absolute inset-y-0 left-0 bg-[#fabc3f] w-0 transition-all duration-300"></div>
         </div>
       </div>
     </Transition>
 
-    <!-- Background Viewport -->
-    <div class="fixed inset-0 -z-10 bg-black">
-      <canvas ref="videoCanvas" class="w-full h-full object-cover" style="will-change: transform;"></canvas>
-    </div>
+    <!-- Video Hero -->
+    <section class="relative w-full h-[62vh] md:h-[72vh] bg-[#0a0d12] overflow-hidden">
+      <video
+        ref="videoPlayer"
+        class="w-full h-full object-cover opacity-90"
+        src="/otomatisin-partner-video-rocket-web.mp4"
+        muted
+        playsinline
+        autoplay
+        loop
+        preload="auto"
+      ></video>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#0a0d12]/40 via-transparent to-[#0a0d12]/80 pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 px-4 pb-10 md:pb-16 text-center">
+        <span class="section-label">Strategic IT Partner</span>
+        <h1 class="mt-4 text-3xl md:text-5xl font-bold text-white tracking-tight max-w-3xl mx-auto leading-tight">
+          Bangun Produk Digital Tanpa Biaya IT di Awal
+        </h1>
+        <p class="mt-3 text-base md:text-lg text-white/70 max-w-2xl mx-auto">
+          Kami investasi teknologi, Anda fokus pada pasar. Model kemitraan profit share untuk ide bisnis yang siap melaju.
+        </p>
+      </div>
+    </section>
 
-    <!-- Hidden Video Source -->
-    <video ref="videoSource" class="hidden" muted playsinline preload="auto">
-      <source src="/otomatisin-partner-video-rocket-web.mp4" type="video/mp4">
-    </video>
+    <!-- Explanation Sections -->
+    <main class="relative z-10 bg-white">
 
-    <!-- UI OVERLAY (FIXED) -->
-    <div class="fixed inset-0 z-10 flex items-center justify-center pointer-events-none px-4 md:px-20">
-      <div class="w-full max-w-5xl relative flex items-center justify-center">
-        
-        <!-- Card 0 -->
-        <div class="card-wrapper absolute opacity-0 translate-y-10 text-center w-full">
-          <div @click="openDetail('hero')" class="rounded-[32px] p-8 md:p-14 border border-gray-200 bg-white/95 backdrop-blur-xl shadow-2xl mx-auto max-w-3xl cursor-pointer hover:-translate-y-2 hover:shadow-black/20 transition-all duration-300 group">
-            <h1 class="hero-title uppercase text-black">Strategic IT Partner</h1>
-            <p class="hero-desc text-gray-500">Ubah Ide Menjadi Produk Digital Tanpa Investasi IT di Awal.</p>
-            <div class="mt-8"><span class="inline-block px-6 py-3 border border-gray-200 rounded-full text-xs font-bold uppercase tracking-widest text-gray-500 hover:bg-black hover:text-white hover:border-black transition-all duration-300">Lihat Penjelasan Detail &rarr;</span></div>
+      <!-- Section 0: Strategic IT Partner -->
+      <section class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24">
+        <div class="max-w-3xl mx-auto">
+          <div class="section-header mb-10">
+            <span class="section-label">Mengapa Kami Berbeda</span>
+            <h2 class="section-title mt-3">Partner Teknologi, Bukan Vendor Jasa</h2>
+            <p class="section-desc">Membangun infrastruktur digital sendiri adalah pertaruhan yang mahal. Kami membuang risiko finansial tersebut dari pundak Anda.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="feature-card">
+              <div class="w-10 h-10 rounded-xl bg-[#fff8eb] flex items-center justify-center mb-4 text-lg">🛡️</div>
+              <h3 class="font-semibold text-[#181d27] mb-1">Zero Upfront Cost</h3>
+              <p class="text-sm text-[#535862] leading-relaxed">Kami menanggung 100% biaya pengembangan sistem, server, hingga peluncuran MVP.</p>
+            </div>
+            <div class="feature-card">
+              <div class="w-10 h-10 rounded-xl bg-[#fff8eb] flex items-center justify-center mb-4 text-lg">🤝</div>
+              <h3 class="font-semibold text-[#181d27] mb-1">Skin in the Game</h3>
+              <p class="text-sm text-[#535862] leading-relaxed">Kami hanya meraih keuntungan ketika sistem yang kami bangun menghasilkan profit untuk bisnis Anda.</p>
+            </div>
+          </div>
+
+          <div class="feature-card-dark mt-4">
+            <h3 class="font-semibold mb-2">Sistem yang Teruji</h3>
+            <p class="text-sm text-[#d5d7da] leading-relaxed">Dari digitalisasi operasional retail tradisional hingga sistem manajemen armada lapangan yang kompleks, kami memastikan teknologi Anda siap menghadapi pasar sejak hari pertama.</p>
           </div>
         </div>
+      </section>
 
-        <!-- Card 1 -->
-        <div class="card-wrapper absolute opacity-0 translate-y-10 text-center w-full">
-          <div @click="openDetail('sprint')" class="rounded-[32px] p-8 md:p-14 border border-gray-200 bg-white/95 backdrop-blur-xl shadow-2xl mx-auto max-w-4xl cursor-pointer hover:-translate-y-2 hover:shadow-black/20 transition-all duration-300 group">
-            <h1 class="hero-title uppercase text-3xl md:text-6xl text-black">90 Hari Menuju Validasi Pasar</h1>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 text-left">
-              <div class="p-4 border-l-2 border-gray-200 group-hover:border-black transition-colors">
-                <h3 class="font-bold text-black mb-2 text-sm">Bulan 1: Build</h3>
-                <p class="text-[10px] text-gray-500">Pengembangan MVP dengan fitur inti siap menghasilkan uang.</p>
+      <!-- Section 1: 90 Hari -->
+      <section id="projects" class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 bg-[#fafafa]">
+        <div class="max-w-4xl mx-auto">
+          <div class="section-header mb-10">
+            <span class="section-label">Metodologi</span>
+            <h2 class="section-title mt-3">Dari Ide ke Evaluasi dalam 4 Minggu</h2>
+            <p class="section-desc">Membangun bisnis digital bukan tentang siapa yang membuat sistem paling rumit di awal, melainkan siapa yang paling cepat memvalidasi kebutuhan pasar dengan risiko terkecil.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="feature-card text-center">
+              <div class="text-2xl mb-3">🚀</div>
+              <h3 class="font-semibold text-[#181d27] text-sm mb-1">Minggu 1: Build</h3>
+              <p class="text-xs text-[#535862]">Bangun MVP dalam 1 minggu dengan fitur inti yang menyelesaikan masalah utama.</p>
+            </div>
+            <div class="feature-card text-center">
+              <div class="text-2xl mb-3">📊</div>
+              <h3 class="font-semibold text-[#181d27] text-sm mb-1">Hari ke-8: Launch</h3>
+              <p class="text-xs text-[#535862]">Rilis ke target pasar dan mulai kumpulkan umpan balik serta data nyata.</p>
+            </div>
+            <div class="feature-card text-center">
+              <div class="text-2xl mb-3">🏁</div>
+              <h3 class="font-semibold text-[#181d27] text-sm mb-1">Minggu 4: Evaluate</h3>
+              <p class="text-xs text-[#535862]">Evaluasi metrik, interview pengguna, dan putuskan scale up, pivot, atau stop.</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="card text-left">
+              <h4 class="font-semibold text-[#181d27] text-base mb-2">🚀 Minggu 1: Build</h4>
+              <p class="text-sm text-[#414651] mb-3 leading-relaxed">Fokus utama adalah membangun MVP yang bisa digunakan pengguna nyata dalam satu minggu. Tidak perlu fitur lengkap, cukup alur utama yang menyelesaikan satu masalah besar.</p>
+              <ul class="list-disc pl-5 space-y-1.5 text-sm text-[#535862]">
+                <li><strong class="text-[#181d27]">Efisiensi Stack:</strong> Nuxt.js / Vue.js untuk antarmuka cepat, Django untuk backend yang aman.</li>
+                <li><strong class="text-[#181d27]">Target Akhir:</strong> MVP siap diluncurkan sebelum hari ke-8.</li>
+              </ul>
+            </div>
+
+            <div class="card text-left">
+              <h4 class="font-semibold text-[#181d27] text-base mb-2">📊 Hari ke-8: Launch</h4>
+              <p class="text-sm text-[#414651] mb-3 leading-relaxed">Setelah MVP siap, segera rilis ke target pasar. Tujuannya bukan viral, tetapi mendapatkan reaksi nyata secepat mungkin.</p>
+              <ul class="list-disc pl-5 space-y-1.5 text-sm text-[#535862]">
+                <li><strong class="text-[#181d27]">Fokus Kami:</strong> Memastikan sistem stabil, memantau performa, dan memperbaiki bug operasional yang muncul.</li>
+                <li><strong class="text-[#181d27]">Fokus Anda:</strong> Menghubungi calon pengguna pertama, mengenalkan alur produk, dan mengumpulkan umpan balik langsung.</li>
+                <li><strong class="text-[#181d27]">Target Akhir:</strong> Data perilaku pengguna asli yang menunjukkan bagian mana yang berharga.</li>
+              </ul>
+            </div>
+
+            <div class="card text-left">
+              <h4 class="font-semibold text-[#181d27] text-base mb-2">🏁 Minggu 4: Evaluate</h4>
+              <p class="text-sm text-[#414651] mb-3 leading-relaxed">Minggu keempat adalah momen kejujuran. Kita duduk bersama, membuka data, dan melihat angka serta opini pengguna secara objektif.</p>
+              <ul class="list-disc pl-5 space-y-1.5 text-sm text-[#535862]">
+                <li><strong class="text-[#181d27]">Analisis Traksi:</strong> Metrik konversi, retensi, revenue, dan feedback kualitatif dari pengguna.</li>
+                <li><strong class="text-[#181d27]">Pengambilan Keputusan:</strong> Scale up jika sinyal positif, pivot jika pasar merespons berbeda, atau stop secara terhormat jika tidak ada kebutuhan nyata.</li>
+              </ul>
+            </div>
+
+            <div class="feature-card-dark">
+              <h4 class="font-semibold mb-2">Mengapa Timeline Ini?</h4>
+              <p class="text-sm text-[#d5d7da] leading-relaxed">Karena kami menaruh modal teknologi pada ide Anda. Satu minggu build memaksa kita fokus pada esensi, launch di hari ke-8 memastikan kita segera belajar dari pasar, dan evaluasi di minggu ke-4 memberikan cukup data untuk mengambil keputusan bisnis yang tepat.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Live Case Study -->
+      <section class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+          <div class="section-header mb-10">
+            <span class="section-label">Portofolio</span>
+            <h2 class="section-title mt-3">Live Case Study</h2>
+            <p class="section-desc">Produk nyata yang kami bangun, kelola, dan kembangkan bersama mitra.</p>
+          </div>
+
+          <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-4 px-4 md:-mx-0 md:px-0 scroll-smooth">
+            <!-- Ambulanku Card -->
+            <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🏥</div>
+                <div>
+                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">Ambulanku</h3>
+                  <p class="text-xs text-[#717680]">Health-Tech & Fleet Management</p>
+                </div>
               </div>
-              <div class="p-4 border-l-2 border-gray-200 group-hover:border-black transition-colors">
-                <h3 class="font-bold text-black mb-2 text-sm">Bulan 2: Launch</h3>
-                <p class="text-[10px] text-gray-500">Operasional penuh dengan dukungan sistem 24/7.</p>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="tag">Nuxt.js</span>
+                <span class="tag">Supabase</span>
+                <span class="tag">Fleet Management</span>
               </div>
-              <div class="p-4 border-l-2 border-gray-200 group-hover:border-black transition-colors">
-                <h3 class="font-bold text-black mb-2 text-sm">Bulan 3: Evaluate</h3>
-                <p class="text-[10px] text-gray-500">Analisis data untuk skala besar atau pivot baru.</p>
+
+              <p class="text-sm text-[#414651] leading-relaxed mb-4">Platform digitalisasi manajemen layanan ambulans darurat dan non-darurat medis. Kami terjun langsung ke lapangan dan menanam investasi teknologi pada ekosistem ini.</p>
+
+              <div class="highlight-bar mb-4">
+                <ul class="space-y-1.5 text-sm text-[#535862]">
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://ambulanku.vercel.app" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">ambulanku.vercel.app</a></li>
+                  <li><strong class="text-[#181d27]">Model:</strong> Dikembangkan dan dikelola penuh dengan model bagi hasil.</li>
+                  <li><strong class="text-[#181d27]">Status:</strong> Live Operation & Optimization.</li>
+                </ul>
+              </div>
+
+              <div class="mt-auto bg-[#fafafa] p-4 rounded-xl border border-[#e9eaeb] italic text-sm text-[#535862]">
+                <span class="font-semibold not-italic block mb-1 text-[#181d27]">Kesimpulan</span>
+                Bukti nyata bahwa teknologi tepat guna mampu merapikan operasional bisnis yang rumit.
               </div>
             </div>
-            <div class="mt-8"><span class="inline-block px-6 py-3 border border-gray-200 rounded-full text-xs font-bold uppercase tracking-widest text-gray-500 hover:bg-black hover:text-white hover:border-black transition-all duration-300">Lihat Penjelasan Detail &rarr;</span></div>
-          </div>
-        </div>
 
-        <!-- Card 2 -->
-        <div class="card-wrapper absolute opacity-0 translate-y-10 text-center w-full">
-          <div @click="openDetail('case-study')" class="rounded-[32px] p-8 md:p-14 border border-gray-200 bg-white/95 backdrop-blur-xl shadow-2xl mx-auto max-w-3xl cursor-pointer hover:-translate-y-2 hover:shadow-black/20 transition-all duration-300 group">
-            <h1 class="hero-title uppercase text-3xl md:text-6xl text-black">Live Case Study</h1>
-            <p class="hero-desc mb-6 text-sm text-gray-500">Sistem Manajemen Ambulans Real-time.</p>
-            <div class="flex justify-center gap-4">
-              <span class="px-3 py-1 bg-black rounded-full text-[8px] tracking-widest uppercase text-white">Nuxt.js</span>
-              <span class="px-3 py-1 bg-black rounded-full text-[8px] tracking-widest uppercase text-white">Supabase</span>
+            <!-- PetaBakat Card -->
+            <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🧠</div>
+                <div>
+                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">PetaBakat</h3>
+                  <p class="text-xs text-[#717680]">EdTech & Parenting Tech</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="tag">Web App</span>
+                <span class="tag">AI Analysis</span>
+                <span class="tag">PDF Export</span>
+              </div>
+
+              <p class="text-sm text-[#414651] leading-relaxed mb-4">Alat survei berbasis web untuk mengenali potensi anak dengan framework Islami "Nasab & Hasab". Menghasilkan laporan AI dengan radar chart, persona, dan rencana stimulasi mingguan.</p>
+
+              <div class="highlight-bar mb-4">
+                <ul class="space-y-1.5 text-sm text-[#535862]">
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://petabakat.otomatisin.web.id/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">petabakat.otomatisin.web.id</a></li>
+                  <li><strong class="text-[#181d27]">Model:</strong> Dikembangkan sebagai sistem wakaf produktif — hasilnya dikelola untuk keberlanjutan dan manfaat sosial.</li>
+                  <li><strong class="text-[#181d27]">Status:</strong> Live Operation & Iteration.</li>
+                </ul>
+              </div>
+
+              <div class="mt-auto bg-[#fafafa] p-4 rounded-xl border border-[#e9eaeb] italic text-sm text-[#535862]">
+                <span class="font-semibold not-italic block mb-1 text-[#181d27]">Kesimpulan</span>
+                Membuktikan solusi digital dapat membantu orang tua memahami dan mengembangkan potensi anak secara personal.
+              </div>
             </div>
-            <div class="mt-8"><span class="inline-block px-6 py-3 border border-gray-200 rounded-full text-xs font-bold uppercase tracking-widest text-gray-500 hover:bg-black hover:text-white hover:border-black transition-all duration-300">Lihat Penjelasan Detail &rarr;</span></div>
           </div>
+
+          <p class="text-center text-xs text-[#717680] md:hidden">← Geser untuk lihat case study lainnya →</p>
         </div>
+      </section>
 
-        <!-- Card 3 -->
-        <div class="card-wrapper absolute opacity-0 translate-y-10 text-center w-full">
-          <div @click="openDetail('testimoni')" class="rounded-[32px] p-8 md:p-14 border border-gray-200 bg-white/95 backdrop-blur-xl shadow-2xl mx-auto max-w-3xl cursor-pointer hover:-translate-y-2 hover:shadow-black/20 transition-all duration-300 group">
-            <h1 class="hero-title uppercase text-3xl md:text-6xl text-black">Apa Kata Mereka?</h1>
-            <p class="hero-desc italic text-sm md:text-xl text-gray-500">"Sistem yang dikembangkan membantu efisiensi bisnis kami secara drastis."</p>
-            <p class="mt-4 text-black font-bold text-xs">— Klien UD. Cipta Abadi</p>
-            <div class="mt-8"><span class="inline-block px-6 py-3 border border-gray-200 rounded-full text-xs font-bold uppercase tracking-widest text-gray-500 hover:bg-black hover:text-white hover:border-black transition-all duration-300">Lihat Penjelasan Detail &rarr;</span></div>
-          </div>
+      <!-- Section 3: CTA -->
+      <section id="partnership" class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 bg-[#fafafa]">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="section-label">Mulai Sekarang</span>
+          <h2 class="section-title mt-3">Siap Meluncur?</h2>
+          <p class="section-desc mb-8">Fokus pada pasar, kami fokus pada teknologi. Mari diskusikan ide bisnis Anda dan lihat apakah kami cocok menjadi partner teknologi Anda.</p>
+          <button @click="isFormOpen = true" class="btn-primary-lg">
+            Daftar Kemitraan
+          </button>
         </div>
+      </section>
 
-        <!-- Card 4 -->
-        <div class="card-wrapper absolute opacity-0 translate-y-10 text-center w-full">
-          <div class="rounded-[32px] p-8 md:p-14 border border-gray-200 bg-white/95 backdrop-blur-xl shadow-2xl mx-auto max-w-3xl">
-            <h1 class="hero-title uppercase text-3xl md:text-6xl text-black">Siap Meluncur?</h1>
-            <p class="hero-desc mb-8 text-sm text-gray-500">Fokus pada pasar, kami fokus pada teknologi.</p>
-            <button @click="isFormOpen = true" class="px-8 py-4 bg-black text-white font-black uppercase tracking-[0.2em] rounded-full hover:bg-gray-800 transition-all active:scale-95 shadow-xl">
-              Daftar Kemitraan
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Scroll Indicator -->
-    <Transition name="fade">
-      <div
-        v-if="!showLoader"
-        class="fixed bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 pointer-events-none select-none"
-      >
-        <span class="text-xs font-black uppercase tracking-[0.5em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Scroll</span>
-        <div class="w-8 h-14 rounded-full border-2 border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-start justify-center pt-2">
-          <div class="w-1.5 h-3 bg-white rounded-full scroll-dot shadow-[0_0_6px_rgba(255,255,255,0.8)]"></div>
-        </div>
-        <!-- Chevron bawah -->
-        <svg class="w-5 h-5 text-white scroll-chevron drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-        </svg>
-      </div>
-    </Transition>
-
-    <!-- SCROLL PROVIDER (INVISIBLE) -->
-    <div class="scroll-provider relative">
-      <div class="trigger-zone-0 h-[150vh]"></div>
-      <div class="trigger-zone-1 h-[200vh]"></div>
-      <div class="trigger-zone-2 h-[150vh]"></div>
-      <div class="trigger-zone-3 h-[150vh]"></div>
-      <div class="trigger-zone-4 h-[150vh]"></div>
       <AppFooter />
-    </div>
-
+    </main>
   </div>
 </template>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 1s ease; }
+.fade-enter-active, .fade-leave-active { transition: opacity 0.6s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
-
-.scroll-dot {
-  animation: scroll-bounce 1.6s ease-in-out infinite;
-}
-
-@keyframes scroll-bounce {
-  0%   { transform: translateY(0);    opacity: 1; }
-  60%  { transform: translateY(28px); opacity: 0; }
-  61%  { transform: translateY(0);    opacity: 0; }
-  100% { transform: translateY(0);    opacity: 1; }
-}
-
-.scroll-chevron {
-  animation: chevron-pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes chevron-pulse {
-  0%, 100% { transform: translateY(0);   opacity: 0.5; }
-  50%       { transform: translateY(4px); opacity: 1; }
-}
 </style>
