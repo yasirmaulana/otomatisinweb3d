@@ -108,7 +108,7 @@ onMounted(() => {
     <main class="relative z-10 bg-white">
 
       <!-- Section 0: Strategic IT Partner -->
-      <section class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24">
+      <section id="why" class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24">
         <div class="max-w-3xl mx-auto">
           <div class="section-header mb-10">
             <span class="section-label">Mengapa Kami Berbeda</span>
@@ -136,8 +136,8 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- Section 1: 90 Hari -->
-      <section id="projects" class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 bg-[#fafafa]">
+      <!-- Section 1: Metodologi -->
+      <section id="methodology" class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 bg-[#fafafa]">
         <div class="max-w-4xl mx-auto">
           <div class="section-header mb-10">
             <span class="section-label">Metodologi</span>
@@ -145,7 +145,7 @@ onMounted(() => {
             <p class="section-desc">Membangun bisnis digital bukan tentang siapa yang membuat sistem paling rumit di awal, melainkan siapa yang paling cepat memvalidasi kebutuhan pasar dengan risiko terkecil.</p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="feature-card text-center">
               <div class="text-2xl mb-3">🚀</div>
               <h3 class="font-semibold text-[#181d27] text-sm mb-1">Minggu 1: Build</h3>
@@ -161,7 +161,7 @@ onMounted(() => {
               <h3 class="font-semibold text-[#181d27] text-sm mb-1">Minggu 4: Evaluate</h3>
               <p class="text-xs text-[#535862]">Evaluasi metrik, interview pengguna, dan putuskan scale up, pivot, atau stop.</p>
             </div>
-          </div>
+          </div> -->
 
           <div class="space-y-4">
             <div class="card text-left">
@@ -201,7 +201,7 @@ onMounted(() => {
       </section>
 
       <!-- Section 2: Live Case Study -->
-      <section class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 overflow-hidden">
+      <section id="portfolio" class="section-reveal opacity-0 translate-y-8 px-4 py-16 md:py-24 overflow-hidden">
         <div class="max-w-6xl mx-auto">
           <div class="section-header mb-10">
             <span class="section-label">Portofolio</span>

@@ -11,8 +11,9 @@
       </div>
 
       <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-        <a href="#projects" @click.prevent="scrollTo('#projects')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Live Case Study</a>
-        <a href="#partnership" @click.prevent="scrollTo('#partnership')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Partnership</a>
+        <a href="#why" @click.prevent="scrollTo('#why')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Why</a>
+        <a href="#methodology" @click.prevent="scrollTo('#methodology')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Metodologi</a>
+        <a href="#portfolio" @click.prevent="scrollTo('#portfolio')" class="transition-colors" :class="isScrolled ? 'text-[#535862] hover:text-[#181d27]' : 'text-white/80 hover:text-white'">Live Case Study</a>
       </nav>
 
       <div class="flex items-center gap-3">
@@ -41,11 +42,9 @@
         v-if="menuOpen"
         class="md:hidden mt-3 rounded-xl bg-white border border-[#e9eaeb] shadow-lg overflow-hidden"
       >
-        <a href="#projects" @click.prevent="navClick('#projects')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa] border-b border-[#e9eaeb]">Live Case Study</a>
-        <a href="#partnership" @click.prevent="navClick('#partnership')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa]">Partnership</a>
-        <div class="p-3 border-t border-[#e9eaeb]">
-          <button @click="$emit('open-form')" class="btn-primary-full">Apply Now</button>
-        </div>
+        <a href="#why" @click.prevent="navClick('#why')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa] border-b border-[#e9eaeb]">Why</a>
+        <a href="#methodology" @click.prevent="navClick('#methodology')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa] border-b border-[#e9eaeb]">Metodologi</a>
+        <a href="#portfolio" @click.prevent="navClick('#portfolio')" class="block px-5 py-3 text-sm font-medium text-[#535862] hover:text-[#181d27] hover:bg-[#fafafa]">Live Case Study</a>
       </nav>
     </Transition>
   </header>
