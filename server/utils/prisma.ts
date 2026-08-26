@@ -5,7 +5,7 @@ import pg from 'pg'
 const { Pool } = pg
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
-const adapter = new PrismaPg(pool)
+const adapter = new PrismaPg(pool, { schema: 'otomatisin' })
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 

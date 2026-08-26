@@ -1,5 +1,20 @@
 import { prisma } from '../../utils/prisma'
 
+function nowJakarta(): Date {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(new Date())
+  const [date, time] = parts.split(', ')
+  return new Date(`${date}T${time}+07:00`)
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { otpCode, ...formData } = body
@@ -26,6 +41,7 @@ export default defineEventHandler(async (event) => {
       acquisition: formData.acquisition,
       validation: formData.validation,
       profitShare: formData.profitShare,
+      createdAt: nowJakarta(),
     },
   })
 

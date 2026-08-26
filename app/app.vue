@@ -210,38 +210,6 @@ onMounted(() => {
           </div>
 
           <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-4 px-4 md:-mx-0 md:px-0 scroll-smooth">
-            <!-- Ambulanku Card -->
-            <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
-              <div class="flex items-center gap-3 mb-4">
-                <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🏥</div>
-                <div>
-                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">Ambulanku</h3>
-                  <p class="text-xs text-[#717680]">Health-Tech & Fleet Management</p>
-                </div>
-              </div>
-
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="tag">Nuxt.js</span>
-                <span class="tag">Supabase</span>
-                <span class="tag">Fleet Management</span>
-              </div>
-
-              <p class="text-sm text-[#414651] leading-relaxed mb-4">Platform digitalisasi manajemen layanan ambulans darurat dan non-darurat medis. Kami terjun langsung ke lapangan dan menanam investasi teknologi pada ekosistem ini.</p>
-
-              <div class="highlight-bar mb-4">
-                <ul class="space-y-1.5 text-sm text-[#535862]">
-                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://ambulanku.vercel.app" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">ambulanku.vercel.app</a></li>
-                  <li><strong class="text-[#181d27]">Model:</strong> Dikembangkan dan dikelola penuh dengan model bagi hasil.</li>
-                  <li><strong class="text-[#181d27]">Status:</strong> Live Operation & Optimization.</li>
-                </ul>
-              </div>
-
-              <div class="mt-auto bg-[#fafafa] p-4 rounded-xl border border-[#e9eaeb] italic text-sm text-[#535862]">
-                <span class="font-semibold not-italic block mb-1 text-[#181d27]">Kesimpulan</span>
-                Bukti nyata bahwa teknologi tepat guna mampu merapikan operasional bisnis yang rumit.
-              </div>
-            </div>
-
             <!-- PetaBakat Card -->
             <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
               <div class="flex items-center gap-3 mb-4">
@@ -263,7 +231,7 @@ onMounted(() => {
               <div class="highlight-bar mb-4">
                 <ul class="space-y-1.5 text-sm text-[#535862]">
                   <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://petabakat.otomatisin.web.id/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">petabakat.otomatisin.web.id</a></li>
-                  <li><strong class="text-[#181d27]">Model:</strong> Dikembangkan sebagai sistem wakaf produktif — hasilnya dikelola untuk keberlanjutan dan manfaat sosial.</li>
+                  <li><strong class="text-[#181d27]">Model:</strong> Dikembangkan sebagai instrumen riset pemetaan potensi anak, dilengkapi saluran untuk berwakaf.</li>
                   <li><strong class="text-[#181d27]">Status:</strong> Live Operation & Iteration.</li>
                 </ul>
               </div>
@@ -273,6 +241,40 @@ onMounted(() => {
                 Membuktikan solusi digital dapat membantu orang tua memahami dan mengembangkan potensi anak secara personal.
               </div>
             </div>
+
+            <!-- BAZARINAJA Card -->
+            <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🛒</div>
+                <div>
+                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">BAZARINAJA</h3>
+                  <p class="text-xs text-[#717680]">Flash Sale & Social Commerce</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="tag">Flash Sale</span>
+                <span class="tag">Social Commerce</span>
+                <span class="tag">Charity</span>
+              </div>
+
+              <p class="text-sm text-[#414651] leading-relaxed mb-4">Platform flash sale barang NEW & PreLove dengan harga affordable. Hasil penjualan disalurkan sebagai sedekah untuk penghafal Al-Qur'an dan penuntut ilmu.</p>
+
+              <div class="highlight-bar mb-4">
+                <ul class="space-y-1.5 text-sm text-[#535862]">
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://bazarinaja.otomatisin.web.id" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">bazarinaja.otomatisin.web.id</a></li>
+                  <li><strong class="text-[#181d27]">Model:</strong> Platform flash sale barang New & Preloved terjangkau, di mana hasil penjualan disalurkan sebagai sedekah untuk penghafal Al-Qur'an dan penuntut ilmu.</li>
+                  <li><strong class="text-[#181d27]">Status:</strong> Live Operation.</li>
+                </ul>
+              </div>
+
+              <div class="mt-auto bg-[#fafafa] p-4 rounded-xl border border-[#e9eaeb] italic text-sm text-[#535862]">
+                <span class="font-semibold not-italic block mb-1 text-[#181d27]">Kesimpulan</span>
+                Menggabungkan model jual-beli cepat dengan dampak sosial melalui alokasi hasil untuk kebaikan.
+              </div>
+            </div>
+
+
           </div>
 
           <p class="text-center text-xs text-[#717680] md:hidden">← Geser untuk lihat case study lainnya →</p>
