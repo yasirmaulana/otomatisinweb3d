@@ -45,5 +45,21 @@ export default defineEventHandler(async (event) => {
     },
   })
 
+  const adminNumber = process.env.ADMIN_WA_NUMBER
+  if (adminNumber) {
+    const params = new URLSearchParams({
+      target: adminNumber,
+      message: `Ada calon partner menginput formulir kemitraan`,
+    })
+    await $fetch('https://api.fonnte.com/send', {
+      method: 'POST',
+      headers: {
+        Authorization: process.env.FONNTE_TOKEN!,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    }).catch(() => {}) // jangan gagalkan response jika notif error
+  }
+
   return { success: true }
 })
