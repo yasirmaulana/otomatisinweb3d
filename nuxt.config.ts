@@ -11,6 +11,11 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: ['gsap', 'gsap/ScrollTrigger']
     }
+  },
+  nitro: {
+    externals: {
+      external: ['@prisma/client', '@prisma/adapter-pg']
+    }
   }
 })
 
