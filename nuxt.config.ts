@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      contactWa: '6281586245143',
+    },
+  },
   modules: ['@nuxtjs/tailwindcss', '@vercel/analytics'],
   css: ['~/assets/css/main.css'],
   vite: {
@@ -15,7 +20,17 @@ export default defineNuxtConfig({
   nitro: {
     externals: {
       external: ['@prisma/client', '@prisma/adapter-pg']
-    }
+    },
+    routeRules: {
+      '/**': {
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+        },
+      },
+    },
   }
 })
 

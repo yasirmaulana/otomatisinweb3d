@@ -6,6 +6,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model OtpCode {
+  phone     String   @id
+  code      String
+  expiresAt DateTime @map("expires_at")
+  attempts  Int      @default(0)
+
+  @@map("lp-otp_codes")
+}
+
 model PartnershipLead {
   id          String   @id @default(uuid())
   name        String

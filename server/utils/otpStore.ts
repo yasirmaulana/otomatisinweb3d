@@ -1,24 +1,32 @@
-interface OtpEntry {
-  code: string
-  expiresAt: number
+import { prisma } from './prisma'
+
+const MAX_ATTEMPTS = 5
+const OTP_TTL_MS = 5 * 60 * 1000
+
+export async function setOtp(phone: string, code: string): Promise<void> {
+  await prisma.otpCode.upsert({
+    where: { phone },
+    update: { code, expiresAt: new Date(Date.now() + OTP_TTL_MS), attempts: 0 },
+    create: { phone, code, expiresAt: new Date(Date.now() + OTP_TTL_MS) },
+  })
 }
 
-// In-memory store, persists across requests in single Nitro process
-const store = new Map<string, OtpEntry>()
-
-export function setOtp(phone: string, code: string) {
-  store.set(phone, { code, expiresAt: Date.now() + 5 * 60 * 1000 })
-}
-
-export function verifyOtp(phone: string, code: string): boolean {
-  const entry = store.get(phone)
+export async function verifyOtp(phone: string, code: string): Promise<boolean> {
+  const entry = await prisma.otpCode.findUnique({ where: { phone } })
   if (!entry) return false
-  if (Date.now() > entry.expiresAt) {
-    store.delete(phone)
+  if (new Date() > entry.expiresAt) {
+    await prisma.otpCode.delete({ where: { phone } })
     return false
   }
-  if (entry.code !== code) return false
-  store.delete(phone)
+  if (entry.attempts >= MAX_ATTEMPTS) {
+    await prisma.otpCode.delete({ where: { phone } })
+    return false
+  }
+  if (entry.code !== code) {
+    await prisma.otpCode.update({ where: { phone }, data: { attempts: { increment: 1 } } })
+    return false
+  }
+  await prisma.otpCode.delete({ where: { phone } })
   return true
 }
 
