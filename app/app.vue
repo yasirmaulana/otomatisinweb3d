@@ -210,12 +210,12 @@ onMounted(() => {
           </div>
 
           <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-4 px-4 md:-mx-0 md:px-0 scroll-smooth">
-            <!-- PetaBakat Card -->
+            <!-- PetaMinatBakat Card -->
             <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🧠</div>
                 <div>
-                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">PetaBakat</h3>
+                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">PetaMinatBakat</h3>
                   <p class="text-xs text-[#717680]">EdTech & Parenting Tech</p>
                 </div>
               </div>
@@ -230,7 +230,7 @@ onMounted(() => {
 
               <div class="highlight-bar mb-4">
                 <ul class="space-y-1.5 text-sm text-[#535862]">
-                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://petabakat.otomatisin.web.id/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">petabakat.otomatisin.web.id</a></li>
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://petaminatbakat.otomatisin.web.id/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">petaminatbakat.otomatisin.web.id</a></li>
                   <li><strong class="text-[#181d27]">Model:</strong> Dikembangkan sebagai instrumen riset pemetaan potensi anak, dilengkapi saluran untuk berwakaf.</li>
                   <li><strong class="text-[#181d27]">Status:</strong> Live Operation & Iteration.</li>
                 </ul>
@@ -274,6 +274,69 @@ onMounted(() => {
               </div>
             </div>
 
+            <!-- MINTS Card -->
+            <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🧕</div>
+                <div>
+                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">MINTS</h3>
+                  <p class="text-xs text-[#717680]">Muslim Marketplace & Modest Fashion</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="tag">Marketplace Muslim</span>
+                <span class="tag">Pre-Order</span>
+                <span class="tag">Flash Sale</span>
+              </div>
+
+              <p class="text-sm text-[#414651] leading-relaxed mb-4">Toko fashion modest premium dengan tagline "Elegan. Syar'i. Dibuat Sepenuh Hati." Menyediakan gamis, abaya, khimar, pashmina, dan tunik dengan pembayaran aman via Duitku.</p>
+
+              <div class="highlight-bar mb-4">
+                <ul class="space-y-1.5 text-sm text-[#535862]">
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://mints.otomatisin.web.id/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">mints.otomatisin.web.id</a></li>
+                  <li><strong class="text-[#181d27]">Model:</strong> E-commerce busana Muslimah dengan koleksi seasonal, pre-order, dan flash sale, lengkap dengan panduan ukuran dan kebijakan pengembalian.</li>
+                  <li><strong class="text-[#181d27]">Status:</strong> Live Operation.</li>
+                </ul>
+              </div>
+
+              <div class="mt-auto bg-[#fafafa] p-4 rounded-xl border border-[#e9eaeb] italic text-sm text-[#535862]">
+                <span class="font-semibold not-italic block mb-1 text-[#181d27]">Kesimpulan</span>
+                Menunjukkan toko online busana Muslimah yang siap beroperasi, dari katalog dan pre-order hingga pembayaran.
+              </div>
+            </div>
+
+            <!-- FESPATI Depok Card -->
+            <div class="snap-start shrink-0 w-[88vw] md:w-[calc(50%-0.75rem)] bg-white rounded-2xl border border-[#e9eaeb] shadow-sm p-5 md:p-6 flex flex-col">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#fff8eb] flex items-center justify-center text-xl">🏹</div>
+                <div>
+                  <h3 class="font-bold text-[#181d27] text-lg leading-tight">FESPATI Depok</h3>
+                  <p class="text-xs text-[#717680]">Website Organisasi & Komunitas Olahraga</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="tag">Company Profile</span>
+                <span class="tag">Agenda Lomba</span>
+                <span class="tag">Galeri</span>
+              </div>
+
+              <p class="text-sm text-[#414651] leading-relaxed mb-4">Website resmi Federasi Panahan Tradisional Indonesia Kota Depok. Memuat galeri kegiatan, agenda kompetisi, direktori klub anggota, profil pengurus, serta berita dan tips panahan tradisional.</p>
+
+              <div class="highlight-bar mb-4">
+                <ul class="space-y-1.5 text-sm text-[#535862]">
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://fespati-depok.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">fespati-depok.vercel.app</a></li>
+                  <li><strong class="text-[#181d27]">Model:</strong> Wadah digital organisasi untuk pembinaan atlet, penyelenggaraan kompetisi, dan pelestarian budaya panahan Nusantara.</li>
+                  <li><strong class="text-[#181d27]">Status:</strong> Live Operation.</li>
+                </ul>
+              </div>
+
+              <div class="mt-auto bg-[#fafafa] p-4 rounded-xl border border-[#e9eaeb] italic text-sm text-[#535862]">
+                <span class="font-semibold not-italic block mb-1 text-[#181d27]">Kesimpulan</span>
+                Membantu komunitas panahan tradisional memiliki kanal resmi untuk informasi, kompetisi, dan keanggotaan.
+              </div>
+            </div>
 
           </div>
 
