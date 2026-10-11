@@ -326,7 +326,7 @@ onMounted(() => {
 
               <div class="highlight-bar mb-4">
                 <ul class="space-y-1.5 text-sm text-[#535862]">
-                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://fespati-depok.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">fespati-depok.vercel.app</a></li>
+                  <li><strong class="text-[#181d27]">Tautan:</strong> <a href="https://fespatidepok.com" target="_blank" rel="noopener noreferrer" class="text-[#b2852d] hover:underline">fespati-depok.vercel.app</a></li>
                   <li><strong class="text-[#181d27]">Model:</strong> Wadah digital organisasi untuk pembinaan atlet, penyelenggaraan kompetisi, dan pelestarian budaya panahan Nusantara.</li>
                   <li><strong class="text-[#181d27]">Status:</strong> Live Operation.</li>
                 </ul>
